@@ -70,7 +70,7 @@ class Employee:
         """
         CURSOR.execute(sql)
         CONN.commit()
-
+        
     @classmethod
     def drop_table(cls):
         """ Drop the table that persists Employee instances """
@@ -185,6 +185,28 @@ class Employee:
         row = CURSOR.execute(sql, (name,)).fetchone()
         return cls.instance_from_db(row) if row else None
 
+    # def reviews(self):
+    #     """Return list of reviews associated with current employee"""
+    #     from review import Review
+    #     sql = """
+    #         SELECT * FROM reviews
+    #         WHERE employee_id = ?
+    #     """
+
+    #     rows = CURSOR.execute(sql, (self.id,)).fetchall()
+
+    #     return [Review.instance_from_db(row) for row in rows]
+
     def reviews(self):
         """Return list of reviews associated with current employee"""
-        pass
+        from review import Review
+        sql = """
+            SELECT * FROM reviews
+            WHERE employee_id = ?
+        """
+        CURSOR.execute(sql, (self.id,),)
+
+        rows = CURSOR.fetchall()
+        return [
+            Review.instance_from_db(row) for row in rows
+        ]
